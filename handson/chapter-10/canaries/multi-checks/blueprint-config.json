@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "checks": [
+    {
+      "type": "http",
+      "name": "aws-homepage",
+      "url": "https://aws.amazon.com/",
+      "method": "GET",
+      "assertions": [
+        { "type": "statusCode", "operator": "equals", "value": 200 }
+      ]
+    },
+    {
+      "type": "dns",
+      "name": "aws-dns",
+      "domain": "aws.amazon.com"
+    },
+    {
+      "type": "ssl",
+      "name": "aws-ssl",
+      "host": "aws.amazon.com",
+      "port": 443
+    }
+  ]
+}

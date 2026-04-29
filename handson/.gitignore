@@ -2,6 +2,14 @@ node_modules/
 cdk.out/
 *.js
 !**/lib/**/*.js
+!**/canaries/**/*.js
 !jest.config.js
 *.d.ts
 .env
+
+# Synthetics canary handlers must live at nodejs/node_modules/index.js inside
+# the asset bundle. Re-include those nested directories explicitly so they are
+# tracked in git despite the broad node_modules/ rule above.
+!**/canaries/**/nodejs/
+!**/canaries/**/nodejs/node_modules/
+!**/canaries/**/nodejs/node_modules/*
