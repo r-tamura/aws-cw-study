@@ -129,11 +129,45 @@ Canary を削除しても、裏で作られた Lambda 関数や IAM ロールが
 
 ## ハンズオン
 
-> TODO: CDK で Heartbeat Canary を1つ、API Canary を1つ作成し、Application Signals SLO の指標として連携させる。
+[handson/chapter-10/](https://github.com/r-tamura/aws-cw-study/tree/main/handson/chapter-10) に CDK プロジェクトを置いた。1 つのスタックで以下 3 種類の Canary を同時に立ち上げる。
+
+1. **Heartbeat Canary** (`syn-nodejs-puppeteer-9.1`) — `https://aws.amazon.com/` の死活監視
+2. **API Canary** (`syn-nodejs-puppeteer-9.1`) — 任意のエンドポイントに GET、200 と本文非空を検査（`--context targetUrl=...` で指定、デフォルトは `https://example.com/`）
+3. **Multi-checks Canary** (`syn-nodejs-3.0`、Playwright ベース) — JSON 設定だけで HTTP + DNS + SSL を 1 Canary で連鎖チェック
+
+要点は次の 4 つ。
+
+- アーティファクト用 S3 バケットは 3 Canary で共有し、prefix で分ける（`heartbeat/` / `api/` / `multi-checks/`）
+- Puppeteer 系の 2 Canary は **X-Ray アクティブトレーシング**を有効化し、Application Signals の Service detail ページから「Synthetics canaries」タブで参照できる状態にする
+- Multi-checks Blueprint は L2 Construct がまだ未対応のため、`CfnCanary.addPropertyOverride('BlueprintTypes', ['multi-checks'])` の **L1 エスケープハッチ** で指定
+- `provisionedResourceCleanup: true` を全 Canary に付け、Canary 削除時に裏 Lambda・IAM ロール・ロググループも一緒に消えるようにする
+
+```bash
+cd handson/chapter-10
+npm install && npm run build
+npx cdk deploy                                          # デフォルト URL で実行
+npx cdk deploy --context targetUrl=https://my-api.example.com/health
+```
+
+デプロイから約 5 分で最初の実行結果が CloudWatch コンソール（Synthetics → Canaries）に出る。失敗時のスクリーンショット・HAR は同コンソールで直接プレビュー可能。`SuccessPercent` メトリクスをアラームソースにすれば、そのまま SLO の指標としても登録できる。
+
+詳細は同ディレクトリの `README.md` を参照。
 
 ## 片付け
 
-> TODO: Canary 削除、関連 Lambda・IAMロール・S3アーティファクトの削除手順を記載。
+```bash
+cd handson/chapter-10
+npx cdk destroy
+```
+
+`provisionedResourceCleanup: true` を入れているので、Canary を消した時点で裏で動いていた **Lambda 関数・実行 IAM ロール・CloudWatch ロググループ**が自動的に削除される。S3 アーティファクトバケットも `autoDeleteObjects: true` にしているため、バケット内オブジェクトが消えてからバケットごと削除される。
+
+```bash
+# 残骸チェック
+aws synthetics describe-canaries \
+  --query "Canaries[?starts_with(Name, 'cw-study-')].Name"
+# -> []
+```
 
 ## まとめ
 
