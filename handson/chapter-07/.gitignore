@@ -1,0 +1,10 @@
+node_modules/
+cdk.out/
+dist/
+*.d.ts
+*.js.map
+lib/**/*.js
+bin/**/*.js
+test/**/*.js
+__pycache__/
+*.pyc

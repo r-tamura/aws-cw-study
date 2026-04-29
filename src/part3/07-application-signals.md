@@ -98,7 +98,7 @@ Application Signals は Burn Rate を自動計算し、`BurnRateConfigurations` 
 
 ## ハンズオン: CDK Serverless アプリで Application Signals を試す
 
-API Gateway → TypeScript Lambda（注文API）→ Python Lambda（在庫API）→ DynamoDB という典型的なサーバレス構成を CDK で組み、Application Signals が**多言語のサービス連携**をどう可視化するかを確認します。
+API Gateway → TypeScript Lambda（Checkout API）→ Python Lambda（Inventory API）→ DynamoDB という典型的なサーバレス構成を CDK で組み、Application Signals が**多言語のサービス連携**をどう可視化するかを確認します。
 
 > **コスト注意**: Lambda・DynamoDB はリクエスト課金のため、軽い負荷であればハンズオン全体で $1 未満に収まります。終了後は必ず `cdk destroy` を実施してください。
 
@@ -106,144 +106,85 @@ API Gateway → TypeScript Lambda（注文API）→ Python Lambda（在庫API）
 
 ```text
 [curl(負荷ジェネレータ)]
-        │ HTTP
+        │ HTTP POST /checkout
         ▼
 [API Gateway HTTP API]
         │
         ▼
-[Lambda: checkout-api (TypeScript / Node.js 22.x)] ──┐
-        │ Lambda 呼び出し                            │
-        ▼                                            │
-[Lambda: inventory-api (Python 3.13)]                │ Application Signals
-        │ DynamoDB                                   │ レイヤー（ADOT）
+[Lambda: CheckoutApi (TypeScript / Node.js 22.x)] ──┐
+        │ Lambda invoke                              │
+        ▼                                            │ Application Signals
+[Lambda: InventoryApi (Python 3.13)]                 │ ADOT Lambda Layer
+        │ DynamoDB                                   │ で自動計装
         ▼                                            │
 [DynamoDB: Inventory テーブル] ──────────────────────┘
 ```
 
-両 Lambda に **AWS Lambda Layer for OpenTelemetry** を付与すると、コード変更なしで自動計装されます。
+両 Lambda は共通モジュール `@aws-cw-study/common` の `enableAppSignals(fn, runtime)` ヘルパで Application Signals を有効化しています。このヘルパは (1) スタックに `CfnDiscovery` を 1 個だけ追加し、(2) `CloudWatchLambdaApplicationSignalsExecutionRolePolicy` を Lambda ロールへ付与し、(3) ランタイム別の **AWS Distro for OpenTelemetry (ADOT) Lambda Layer** を装着し、(4) `AWS_LAMBDA_EXEC_WRAPPER=/opt/otel-instrument` を設定する 4 つの作業を 1 行に集約します。これによりアプリ側のコード変更なしで自動計装が成立します。
 
-### ディレクトリ構成
+### CDK コードと手順
 
-```text
-handson/chapter-07/
-├── bin/app.ts                  # CDKエントリポイント
-├── lib/app-stack.ts            # スタック定義
-├── lambda-ts/
-│   └── checkout/index.ts       # TypeScript Lambda
-├── lambda-py/
-│   └── inventory/handler.py    # Python Lambda
-├── cdk.json
-├── package.json
-└── tsconfig.json
+完全なコードと詳細な手順は [`handson/chapter-07/`](https://github.com/r-tamura/aws-cw-study/tree/main/handson/chapter-07) を参照してください。サマリ:
+
+- `lib/stack.ts`: DynamoDB テーブル `Inventory`、Python Lambda `InventoryApi`、TypeScript Lambda `CheckoutApi`、HTTP API（`POST /checkout`）を作成。`enableAppSignals(inventory, 'python')` と `enableAppSignals(checkout, 'nodejs')` を呼ぶだけで両 Lambda が Application Signals 対応になる
+- `lambda-ts/checkout/index.ts`: HTTP リクエストを受け、`@aws-sdk/client-lambda` で `InventoryApi` を invoke。在庫があれば 200、無ければ 409 を返す
+- `lambda-py/inventory/handler.py`: DynamoDB に対して `get` / `set` / `decrement` を実行（条件付き更新で在庫切れを検出）
+
+デプロイ手順は次のとおりです。
+
+```bash
+cd handson/chapter-07
+npm install && npm run build
+npx cdk bootstrap   # 初回のみ
+npx cdk deploy
+# 出力された ApiUrl を控える
+
+API_URL=<ApiUrl>
+while true; do
+  curl -s -X POST "$API_URL/checkout" -d '{"sku":"ABC-123","qty":1}'
+  sleep 1
+done
 ```
 
-### 主要な CDK コード（`lib/app-stack.ts` 抜粋）
+5〜10 分後、CloudWatch コンソールの **Application Signals → Services / Service Map / Service detail** で 2 サービスと依存エッジが描画されていることを確認します。
 
-Application Signals を有効化する核は、以下の3つです。
+### SLO を作成
 
-```typescript
-import { aws_applicationsignals as appsignals } from 'aws-cdk-lib';
-import { Function, Runtime, Code, LayerVersion } from 'aws-cdk-lib/aws-lambda';
-import { ManagedPolicy } from 'aws-cdk-lib/aws-iam';
+1. Application Signals → **Service Level Objectives → Create SLO**
+2. 対象: `CheckoutApi`、SLI Type: **Request-based**、Metric: Availability
+3. Target: **99.5%**、Window: rolling **30 days**
+4. SLO Recommendations ボタンを押すと AWS が過去 30 日のメトリクスから推奨値を提示する
 
-// 1. Application Signals サービス検出を有効化（アカウント単位、初回のみ必要）
-new appsignals.CfnDiscovery(this, 'ApplicationSignalsDiscovery', {});
+### Burn Rate アラーム
 
-// 2. Lambda Layer for OpenTelemetry の ARN（リージョン・ランタイムごとに異なる）
-//    最新ARNは https://aws-otel.github.io/docs/getting-started/lambda を参照
-const adotLayerArnPython = 'arn:aws:lambda:ap-northeast-1:615299751070:layer:AWSOpenTelemetryDistroPython:N';
-const adotLayerArnNode   = 'arn:aws:lambda:ap-northeast-1:615299751070:layer:AWSOpenTelemetryDistroJs:N';
+SLO 詳細画面の Burn Rate 設定から、CloudWatch アラームを作成します。代表的な閾値の組み合わせは以下のとおりです。
 
-// 3. ヘルパ: 任意の Lambda を Application Signals 有効化する
-const enableAppSignals = (fn: Function, layerArn: string) => {
-  fn.role?.addManagedPolicy(
-    ManagedPolicy.fromAwsManagedPolicyName('CloudWatchLambdaApplicationSignalsExecutionRolePolicy')
-  );
-  fn.addLayers(LayerVersion.fromLayerVersionArn(this, `${fn.node.id}OtelLayer`, layerArn));
-  fn.addEnvironment('AWS_LAMBDA_EXEC_WRAPPER', '/opt/otel-instrument');
-};
-```
+| 用途 | Window | Burn Rate 閾値 | 推奨アクション |
+|------|--------|----------------|----------------|
+| Fast burn | 1h | > 14.4 | ページャー / オンコール起床 |
+| Slow burn | 6h | > 6 | チケット起票 / 翌営業日対応 |
 
-そのうえで普通に Lambda を定義し、最後に `enableAppSignals` を呼ぶだけです。
-
-```typescript
-const inventory = new Function(this, 'InventoryApi', {
-  runtime: Runtime.PYTHON_3_13,
-  handler: 'handler.handler',
-  code: Code.fromAsset('lambda-py/inventory'),
-});
-table.grantReadWriteData(inventory);
-enableAppSignals(inventory, adotLayerArnPython);
-
-const checkout = new Function(this, 'CheckoutApi', {
-  runtime: Runtime.NODEJS_22_X,
-  handler: 'index.handler',
-  code: Code.fromAsset('lambda-ts/checkout'),
-  environment: { INVENTORY_FN: inventory.functionName },
-});
-inventory.grantInvoke(checkout);
-enableAppSignals(checkout, adotLayerArnNode);
-```
-
-### 手順
-
-1. **準備**
-   ```bash
-   cd handson/chapter-07
-   npm install
-   npx cdk bootstrap   # 初回のみ
-   ```
-
-2. **デプロイ**
-   ```bash
-   npx cdk deploy
-   ```
-   出力された API Gateway の URL を控える。
-
-3. **トラフィック投入**（別ターミナルで負荷を流す）
-   ```bash
-   API_URL=https://xxxxxx.execute-api.ap-northeast-1.amazonaws.com
-   while true; do
-     curl -s -X POST "$API_URL/checkout" -d '{"sku":"ABC-123","qty":1}'
-     sleep 1
-   done
-   ```
-
-4. **CloudWatch コンソールで確認**（5〜10分待つ）
-   - Application Signals → **Services**: `CheckoutApi`、`InventoryApi` の2サービスが現れる
-   - Application Signals → **Service Map**: `CheckoutApi` → `InventoryApi` → `DynamoDB::Inventory` の依存関係
-   - 各サービスの **Latency / Faults / Errors** が描画される
-
-5. **SLO を作成**
-   - Application Signals → Service Level Objectives → Create SLO
-   - 対象: `CheckoutApi`、メトリクス: Availability
-   - 目標: **Request-based、99.5%、移動30日窓**
-   - 必要に応じて **SLO Recommendations** ボタンで AWS の提案値を採用
-   - Burn Rate 設定: `1時間で5%消費` を Fast burn 閾値に
-
-6. **アラーム化**
-   - 作成された Burn Rate メトリクスから「Fast burn > 14.4」のアラームを作る
-   - 通知先 SNS トピックは任意
+通知先の SNS トピックを紐付けると、Slack / Email へ通知が飛びます。
 
 ### 期待する結果
 
-- `ApplicationSignals` 名前空間に `Latency`、`Error`、`Fault` メトリクスが現れる
-- Services ページに2つの Lambda がサービスとして表示され、SLI 健全性アイコンが緑になる
-- Service Map にノード3つ（`CheckoutApi` / `InventoryApi` / `DynamoDB`）と依存エッジが描かれる
-- SLO 詳細ページで Attainment（達成率）と残りエラーバジェットが見える
+- `ApplicationSignals` 名前空間に `Latency` / `Error` / `Fault` メトリクスが現れる
+- Service Map にノード 3 つ（`CheckoutApi` / `InventoryApi` / `DynamoDB::Inventory`）と依存エッジが描画される
+- SLO 詳細ページで Attainment（達成率）と残りエラーバジェットが確認できる
+- 在庫切れにすると HTTP 409 が増え、Errors メトリクスが上昇する
 
-## 片付け
+### 片付け
 
 ```bash
 cd handson/chapter-07
 npx cdk destroy
 ```
 
-加えて、コンソールから以下を手動削除します。
+加えてコンソールから以下を手動で削除します。
 
 1. 作成した SLO（Application Signals → Service Level Objectives）
-2. ロググループ `/aws/lambda/CheckoutApi`、`/aws/lambda/InventoryApi`、`/aws/application-signals/data`（保持期間でも消えるが、即時削除すれば課金停止が早い）
-3. 検証目的で複数アカウントで試したなら、`AWSServiceRoleForCloudWatchApplicationSignals` も削除可
+2. 作成した Burn Rate アラーム
+3. ロググループ `/aws/lambda/CheckoutApi` / `/aws/lambda/InventoryApi` / `/aws/application-signals/data`
 
 ## まとめ
 
