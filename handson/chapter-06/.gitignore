@@ -1,0 +1,7 @@
+# Per-chapter ignore: nothing in chapter-06 needs the compiled JS to be tracked.
+# `cdk.json` runs ts-node directly, so the lib/*.js outputs are pure build artifacts.
+*.js
+*.d.ts
+!jest.config.js
+node_modules/
+cdk.out/
