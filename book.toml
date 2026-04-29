@@ -10,7 +10,7 @@ default-theme = "light"
 preferred-dark-theme = "navy"
 git-repository-url = "https://github.com/r-tamura/aws-cw-study"
 edit-url-template = "https://github.com/r-tamura/aws-cw-study/edit/main/{path}"
-additional-js = ["mermaid.min.js", "mermaid-init.js"]
+additional-js = ["mermaid.min.js", "mermaid-init.js", "mermaid-zoom.js"]
 
 [preprocessor]
 
