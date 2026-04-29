@@ -1,0 +1,11 @@
+# Compiled CDK output (we use ts-node, no need to commit .js artifacts).
+lib/**/*.js
+lib/**/*.d.ts
+bin/**/*.js
+bin/**/*.d.ts
+test/**/*.js
+test/**/*.d.ts
+
+# web/ contains static site source assets that must ship to S3.
+# Override handson/.gitignore which ignores *.js outside lib/.
+!web/**/*.js
