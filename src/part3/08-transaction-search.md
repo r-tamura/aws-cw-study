@@ -127,11 +127,80 @@ Transaction Search は次の課金軸で構成されます。
 
 ## ハンズオン
 
-> TODO: 第7章のハンズオンの上に Transaction Search を有効化し、Visual Editor / Logs Insights から実際にスパンを検索する手順を追加する。
+第7章でデプロイしたスタック（API GW → Checkout/Inventory Lambda → DynamoDB、ADOT による Application Signals 計装済み）をそのまま流用し、**アカウント単位で Transaction Search を有効化**してスパンを `aws/spans` に流します。コードは追加しません（第7章の Lambda がすでに OTLP でスパンを出しているので、送信先設定だけを切り替えれば取り込みが始まります）。
+
+詳細手順とスクリプトは [`handson/chapter-08/README.md`](https://github.com/r-tamura/aws-cw-study/blob/main/handson/chapter-08/README.md) を参照してください。要点だけ抜粋します。
+
+### 1. 第7章のスタックを準備
+
+```bash
+cd handson/chapter-07
+npx cdk deploy   # 既にデプロイ済みならスキップ
+```
+
+### 2. Transaction Search を有効化
+
+```bash
+cd ../chapter-08
+bash enable-transaction-search.sh ap-northeast-1
+```
+
+このスクリプトは AWS CLI で次の 3 つを順番に呼びます。
+
+1. `logs:PutResourcePolicy` — X-Ray サービスプリンシパルに `aws/spans` への `PutLogEvents` を許可
+2. `xray:UpdateTraceSegmentDestination --destination CloudWatchLogs` — 送信先を CloudWatch Logs に切替
+3. `xray:UpdateIndexingRule --rule '{"Probabilistic":{"DesiredSamplingPercentage":100}}'` — トレースサマリーを 100% に（既定 1% のままにするときは第2引数で `1` を渡す）
+
+最後に `xray:GetTraceSegmentDestination` で `Destination=CloudWatchLogs / Status=ACTIVE` を確認します。何度再実行しても上書きするだけなので冪等です。
+
+### 3. トラフィックを流す
+
+第7章の curl ループをそのまま回します（[第7章 README](https://github.com/r-tamura/aws-cw-study/blob/main/handson/chapter-07/README.md) 参照）。**5〜10 分**待つとスパンが `aws/spans` に到達します。
+
+### 4. Visual Editor で 3 モードを試す
+
+CloudWatch コンソール → **Application Signals → Transaction Search**
+
+- **List**: `service.name = CheckoutApi AND status.code = ERROR` で 409 を返したスパン群を 1 件ずつ確認
+- **Timeseries**: `avg(durationNano)` を `service.name` で系列分けして傾向を見る
+- **Group Analysis**: `count by attributes.http.status_code` で 200 / 409 の比率を把握
+
+### 5. Logs Insights で同じデータをクエリ
+
+`aws/spans` は通常のロググループなので Logs Insights からも触れます。サンプルクエリを `handson/chapter-08/queries/` に置いてあります。
+
+| ファイル | 用途 |
+|---------|------|
+| [`slowest-operations.sql`](https://github.com/r-tamura/aws-cw-study/blob/main/handson/chapter-08/queries/slowest-operations.sql) | 平均レイテンシ Top 5 |
+| [`top-customers-affected.sql`](https://github.com/r-tamura/aws-cw-study/blob/main/handson/chapter-08/queries/top-customers-affected.sql) | エラー件数が多い顧客 Top 10 |
+| [`error-traces.sql`](https://github.com/r-tamura/aws-cw-study/blob/main/handson/chapter-08/queries/error-traces.sql) | 直近のエラー spans + traceId |
+
+### 期待する結果
+
+- 5〜10 分後、`aws/spans` ロググループにスパンが構造化ログとして到着している
+- Visual Editor の 3 モードでスパンを検索・集計・系列化できる
+- Logs Insights の `slowest-operations.sql` で、`InventoryApi` の DynamoDB 系スパンと `CheckoutApi` の handler スパンの平均 duration の差が見える
 
 ## 片付け
 
-> TODO: Transaction Search の無効化、`aws/spans` ロググループの削除手順を追記する。
+```bash
+cd handson/chapter-08
+bash disable-transaction-search.sh ap-northeast-1
+```
+
+このスクリプトは以下を行います。
+
+1. `xray:UpdateTraceSegmentDestination --destination XRay` — 送信先を従来の X-Ray インデックスに戻す
+2. `xray:UpdateIndexingRule` — Default ルールを 1% に戻す（無料枠に復帰）
+3. `logs:DeleteResourcePolicy` — `TransactionSearchXrayAccess` を削除
+
+`aws/spans` ロググループ本体はストレージ課金が続くため、不要なら明示削除します。
+
+```bash
+aws logs delete-log-group --log-group-name aws/spans --region ap-northeast-1
+```
+
+第7章のスタック自体を破棄するなら、最後に `cd ../chapter-07 && npx cdk destroy`。
 
 ## まとめ
 
