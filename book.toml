@@ -1,0 +1,18 @@
+[book]
+title = "AWS CloudWatch 学習帳"
+description = "Amazon CloudWatch を体系的に学ぶための学習帳。最新のオブザーバビリティ機能（Application Signals / Transaction Search 等）を含む。"
+authors = ["r-tamura"]
+language = "ja"
+src = "src"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+git-repository-url = ""
+edit-url-template = ""
+additional-js = ["mermaid.min.js", "mermaid-init.js"]
+
+[preprocessor]
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
