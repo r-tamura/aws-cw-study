@@ -21,36 +21,57 @@
 
 ## 本書のゴール
 
-本書を読み終えると、CloudWatch コンソールの**左メニューに並ぶ全項目について、それが何で、何を解決するためのものか**を説明できるようになります。
+本書を読み終えると、CloudWatch コンソールの**左メニューに並ぶ全項目について、それが何で、何を解決するためのものか**を説明できるようになります。本書はメニュー全 11 項目を網羅しています。
 
-| メニュー項目 | 対応 |
+| メニュー項目 | 対応する章 |
 |---|---|
-| 取り込み（Ingestion / Pipelines） | フェーズ2 |
-| ダッシュボード | 第II部 |
-| アラーム | 第II部 |
-| AI オペレーション（Investigations） | フェーズ2 |
-| 生成 AI オブザーバビリティ | フェーズ2 |
-| Application Signals (APM) | 第III部 |
-| インフラストラクチャモニタリング | フェーズ2 |
-| ログ | 第II部 |
-| メトリクス | 第II部 |
-| ネットワークモニタリング | フェーズ2 |
-| セットアップ（Cross-account / OAM 等） | フェーズ2 |
+| 取り込み（Ingestion / Pipelines） | [第IV部 Ch11](./part4/11-ingestion.md) |
+| ダッシュボード | [第II部 Ch6](./part2/06-dashboards.md) |
+| アラーム | [第II部 Ch5](./part2/05-alarms.md) |
+| AI オペレーション（Investigations） | [第V部 Ch17](./part5/17-investigations.md) |
+| 生成 AI オブザーバビリティ | [第V部 Ch18](./part5/18-genai-observability.md) |
+| Application Signals (APM) | [第III部 Ch7-10](./part3/07-application-signals.md) |
+| インフラストラクチャモニタリング | [第IV部 Ch13-15](./part4/13-container-insights.md) |
+| ログ | [第II部 Ch4](./part2/04-logs.md) |
+| メトリクス | [第II部 Ch3](./part2/03-metrics.md) |
+| ネットワークモニタリング | [第V部 Ch16](./part5/16-network-monitoring.md) |
+| セットアップ（Cross-account / OAM 等） | [第VI部 Ch19](./part6/19-setup.md) |
 
-## 本書で扱う範囲（フェーズ1 = MVP）
+加えて、メニュー横断で必要となる以下のトピックを独立章として扱っています。
 
-最新の CloudWatch（2026年時点）における以下の領域を扱います。
+- **CloudWatch 全体像と環境準備** — [第I部 Ch1-2](./part1/01-overview.md)
+- **OpenTelemetry** — [第IV部 Ch12](./part4/12-opentelemetry.md)（CloudWatch の OTLP エンドポイント、ADOT、PromQL 連携）
 
-- 中核機能: Metrics / Logs / Alarms / Dashboards
-- アプリケーション・オブザーバビリティ: Application Signals / Transaction Search / RUM / Synthetics
+## 章構成のサマリ
 
-## フェーズ2 で追加予定（メニュー網羅完成）
+```
+第I部 基礎
+  Ch1 CloudWatch 全体像
+  Ch2 環境準備
 
-メニューにあるが MVP に含まれていない項目を、以下の構成で順次追加します。
+第II部 中核機能
+  Ch3 Metrics / Ch4 Logs / Ch5 Alarms / Ch6 Dashboards
 
-- **取り込み（Ingestion / Pipelines）** — CloudWatch Pipelines、Facets、OCSF/OTel ノーマライゼーション
-- **インフラストラクチャモニタリング** — Container Insights / Database Insights / Lambda Insights
-- **ネットワークモニタリング** — Internet Monitor / Network Flow Monitor
-- **AI オペレーション** — CloudWatch Investigations、5 Whys 分析
-- **生成 AI オブザーバビリティ** — Bedrock AgentCore、LangChain 等の観測、MCP / GitHub Action 連携
-- **セットアップ** — Cross-account / Cross-region observability、Observability Access Manager (OAM)、Log centralization
+第III部 アプリケーション・オブザーバビリティ
+  Ch7 Application Signals & SLO
+  Ch8 Transaction Search
+  Ch9 RUM
+  Ch10 Synthetics
+
+第IV部 取り込みとインフラ監視
+  Ch11 取り込み (Ingestion / Pipelines)
+  Ch12 OpenTelemetry
+  Ch13 Container Insights
+  Ch14 Database Insights
+  Ch15 Lambda Insights
+
+第V部 ネットワーク監視と AI 機能
+  Ch16 ネットワークモニタリング
+  Ch17 CloudWatch Investigations
+  Ch18 生成 AI オブザーバビリティ
+
+第VI部 横断・セットアップ
+  Ch19 Cross-account / OAM / Log Centralization
+```
+
+各章の **ハンズオン** 節は本書フェーズ2 段階では TODO となっています。AWS CDK + Serverless（Lambda TypeScript / Python）構成での統一されたハンズオン群はフェーズ3で順次追加予定です。
