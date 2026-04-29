@@ -25,8 +25,8 @@ LOG = logging.getLogger()
 LOG.setLevel(logging.INFO)
 
 _TABLE_NAME = os.environ.get("TABLE_NAME", "Inventory")
-_DDB = boto3.resource("dynamodb")
-_TABLE = _DDB.Table(_TABLE_NAME)
+_DDB = boto3.resource("dynamodb")  # type: ignore[no-untyped-call]
+_TABLE = _DDB.Table(_TABLE_NAME)  # type: ignore[attr-defined]
 
 
 def _log(level: str, msg: str, **extra: Any) -> None:
