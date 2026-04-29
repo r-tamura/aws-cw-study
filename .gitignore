@@ -1,3 +1,6 @@
 book/
 .DS_Store
 .claude/settings.local.json
+.claude/scheduled_tasks.lock
+.claude/worktrees/
+.claude/skills/empirical-prompt-tuning/
