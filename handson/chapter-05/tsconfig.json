@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022"],
+    "declaration": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "types": ["node", "jest"]
+  },
+  "include": ["bin/**/*.ts", "lib/**/*.ts", "test/**/*.ts", "lambda-ts/**/*.ts"],
+  "exclude": ["node_modules", "cdk.out", "dist"]
+}
