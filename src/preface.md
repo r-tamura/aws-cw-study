@@ -74,4 +74,10 @@
   Ch19 Cross-account / OAM / Log Centralization
 ```
 
-各章の **ハンズオン** 節は本書フェーズ2 段階では TODO となっています。AWS CDK + Serverless（Lambda TypeScript / Python）構成での統一されたハンズオン群はフェーズ3で順次追加予定です。
+## ハンズオン
+
+各章の **ハンズオン** 節は AWS CDK + Serverless（Lambda TypeScript / Python）構成で統一しています。
+
+- **Phase 3a 完了（Ch 3〜10）**: 中核機能 + アプリケーション・オブザーバビリティの 8 章。各章のハンズオンプロジェクトは [`handson/chapter-NN/`](https://github.com/r-tamura/aws-cw-study/tree/main/handson) に独立した CDK スタックとして配置済み。共通ヘルパは `handson/_common/` (`@aws-cw-study/common`) で再利用
+- **Phase 3b（予定）**: Ch 11〜15 (取り込み + インフラ Insights) のハンズオン
+- **Phase 3c（予定）**: Ch 16〜19 (ネットワーク + AI + セットアップ) のハンズオン
