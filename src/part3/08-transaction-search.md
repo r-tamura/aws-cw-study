@@ -83,7 +83,7 @@ fields @timestamp, attributes.`db.statement`, durationNano
 
 ## 取り込み元: OpenTelemetry / X-Ray のどちらでも
 
-Transaction Search は **OTLP（OpenTelemetry Protocol）と X-Ray** の両方からスパンを受け取れます。
+Transaction Search は **OTLP（[OpenTelemetry](../part4/12-opentelemetry.md) Protocol）と X-Ray** の両方からスパンを受け取れます。
 
 - **Application Signals 経由**: ADOT で自動計装した Java/Python/Node.js/.NET アプリは、すでに OTLP でスパンを送っているので、Transaction Search を有効化すれば**追加実装ゼロ**で取り込みが始まる
 - **X-Ray SDK 経由**: 既存の X-Ray 計装も同様に、サンプリングを 100% に上げれば Transaction Search の対象となる
