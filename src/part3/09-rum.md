@@ -132,11 +132,62 @@ RUM SDK が CloudWatch にデータを送るには、未認証ユーザーでも
 
 ## ハンズオン
 
-> TODO: CDK で Cognito Identity Pool + RUM App Monitor を作成し、簡単な静的サイト（CloudFront + S3）に SDK を組み込んで Core Web Vitals を観測する。
+CDK で **S3 + CloudFront + Cognito Identity Pool + RUM AppMonitor** を一括構築し、
+ブラウザに RUM Web SDK を埋め込んでテレメトリを送信するまでを体験します。
+
+詳細手順は [`handson/chapter-09/README.md`](https://github.com/r-tamura/aws-cw-study/blob/main/handson/chapter-09/README.md) を参照。
+要点だけ抜き出すと:
+
+```bash
+cd handson/chapter-09
+npm install
+npx cdk bootstrap   # 初回のみ
+npx cdk deploy      # ① まずスタックを作る
+```
+
+`cdk deploy` の Outputs に `CloudFrontUrl` / `IdentityPoolId` / `AppMonitorName` などが出ます。
+**AppMonitor の ID** はスタック出力には現れないので、AWS CLI で取得します。
+
+```bash
+aws rum get-app-monitor --name aws-cw-study-ch09 \
+  --query 'AppMonitor.Id' --output text
+```
+
+取得した **AppMonitor ID** と **Identity Pool ID** を `web/index.html` の RUM スニペットの
+`REPLACE_WITH_*` に貼り付けて再デプロイします。
+
+```bash
+npx cdk deploy   # ② SDK 設定値を反映して再デプロイ
+```
+
+`CloudFrontUrl` をブラウザで開くと、
+
+- ナビボタン（`/home` / `/about`）で **ページビュー**
+- `fetch` ボタンで **HTTP テレメトリ**
+- エラーボタンで **JS エラー**
+- カスタムイベントボタンで `recordEvent`
+
+がそれぞれ発火し、CloudWatch RUM のコンソールから `aws-cw-study-ch09` AppMonitor を
+開くと、Page views / Errors / Performance（Core Web Vitals）が反映されているのが確認できます。
+
+`cwLogEnabled: true` にしているので、Logs Insights からも RUM イベントを直接クエリできます。
+
+```text
+fields @timestamp, event_type, event_details.target_id
+| sort @timestamp desc
+| limit 50
+```
 
 ## 片付け
 
-> TODO: App Monitor 削除、Cognito Identity Pool 削除、ロググループ削除を記載。
+```bash
+cd handson/chapter-09
+npx cdk destroy
+```
+
+これだけで AppMonitor / Cognito Identity Pool / 未認証ロール / CloudFront /
+S3 バケット（中身込み、`autoDeleteObjects: true`）/ ロググループがすべて消えます。
+CloudFront の無効化に数分かかる点だけ注意してください。
 
 ## まとめ
 

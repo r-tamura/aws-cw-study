@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>aws-cw-study Ch9 RUM demo</title>
+    <style>
+      :root {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        color-scheme: light dark;
+      }
+      body {
+        max-width: 720px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.55;
+      }
+      h1 {
+        margin-bottom: 0.25rem;
+      }
+      nav button,
+      main button {
+        margin: 0.25rem 0.5rem 0.25rem 0;
+        padding: 0.5rem 0.9rem;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      pre {
+        background: rgba(127, 127, 127, 0.12);
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
+      .page {
+        display: none;
+      }
+      .page.active {
+        display: block;
+      }
+      .log-entry {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.85rem;
+        padding: 0.25rem 0.5rem;
+        border-bottom: 1px solid rgba(127, 127, 127, 0.2);
+      }
+    </style>
+    <!--
+      RUM Web SDK loaded from the official CDN. The version + region in the URL
+      must match your deploy. Update REGION_PLACEHOLDER if you deploy outside us-east-1.
+      See: https://github.com/aws-observability/aws-rum-web
+    -->
+    <script>
+      (function (n, i, v, r, s, c, x, z) {
+        x = window.AwsRumClient = { q: [], n: n, i: i, v: v, r: r, c: c };
+        window[n] = function (c, p) {
+          x.q.push({ c: c, p: p });
+        };
+        z = document.createElement('script');
+        z.async = true;
+        z.src = s;
+        document.head.insertBefore(z, document.head.getElementsByTagName('script')[0]);
+      })(
+        'cwr',
+        // ↓ Replace these placeholders after your first cdk deploy.
+        'REPLACE_WITH_APP_MONITOR_ID',
+        '1.0.0',
+        'us-east-1',
+        'https://client.rum.us-east-1.amazonaws.com/1.20.0/cwr.js',
+        {
+          sessionSampleRate: 1.0,
+          identityPoolId: 'REPLACE_WITH_IDENTITY_POOL_ID',
+          endpoint: 'https://dataplane.rum.us-east-1.amazonaws.com',
+          telemetries: ['errors', 'performance', 'http'],
+          allowCookies: true,
+          enableXRay: true,
+        },
+      );
+    </script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <h1>CloudWatch RUM ハンズオン</h1>
+    <p>aws-cw-study Chapter 9: RUM SDK が CloudWatch にテレメトリを送る様子を確認するデモページです。</p>
+
+    <nav>
+      <button data-nav="home">/home</button>
+      <button data-nav="about">/about</button>
+    </nav>
+
+    <main>
+      <section id="page-home" class="page active">
+        <h2>Home</h2>
+        <p>下のボタンで RUM が拾うイベントを発火できます。</p>
+        <button id="btn-fetch">fetch 公開 API を呼ぶ</button>
+        <button id="btn-error">JS エラーを発生させる</button>
+        <button id="btn-custom">カスタムイベント送信</button>
+        <h3>ログ</h3>
+        <div id="log"></div>
+      </section>
+
+      <section id="page-about" class="page">
+        <h2>About</h2>
+        <p>このページは仮想ルーティングで切り替えています。RUM はページビューを 1 セッションで複数記録できます。</p>
+        <pre>recordPageView('/about')</pre>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        RUM コンソールで App Monitor <code>aws-cw-study-ch09</code> を開き、
+        Page views / Errors / Sessions のタブを切り替えながら確認してください。
+      </p>
+    </footer>
+  </body>
+</html>
