@@ -3,28 +3,31 @@
 // which makes labels unreadable for dense flowcharts. This script adds a
 // modal overlay on click so readers can see the diagram at full size.
 //
-// Behavior:
-//   - cursor: zoom-in on every rendered mermaid SVG
-//   - click   -> open in fullscreen overlay (max 95vw x 95vh)
-//   - click overlay or press Esc -> close
-//   - browser-native pinch/Ctrl+wheel still works inside the modal
+// Implementation note:
+//   We bind the click handler on the `<pre class="mermaid">` parent rather
+//   than the inner `<svg>`. mermaid replaces the SVG element across renders
+//   (theme switch, view changes), which would silently drop listeners
+//   attached to the SVG itself. The parent <pre> is stable.
 
 (() => {
   'use strict';
 
-  const ZOOM_BOUND_FLAG = 'data-zoom-bound';
+  const BOUND = Symbol.for('aws-cw-study.mermaid-zoom.bound');
   const MODAL_CLASS = 'mermaid-zoom-modal';
 
-  // Inject minimal CSS once.
   const style = document.createElement('style');
   style.textContent = `
-    pre.mermaid svg, .mermaid > svg {
+    pre.mermaid {
       cursor: zoom-in;
       transition: outline 0.15s ease;
-    }
-    pre.mermaid svg:hover, .mermaid > svg:hover {
-      outline: 2px solid rgba(0, 122, 204, 0.5);
+      outline: 2px solid transparent;
       outline-offset: 4px;
+    }
+    pre.mermaid:hover {
+      outline-color: rgba(0, 122, 204, 0.5);
+    }
+    pre.mermaid svg {
+      pointer-events: none; /* let the click bubble to <pre> */
     }
     .${MODAL_CLASS} {
       position: fixed;
@@ -62,10 +65,13 @@
   `;
   document.head.appendChild(style);
 
-  function bindSvg(svg) {
-    if (svg.getAttribute(ZOOM_BOUND_FLAG)) return;
-    svg.setAttribute(ZOOM_BOUND_FLAG, 'true');
-    svg.addEventListener('click', (e) => {
+  function bindContainer(container) {
+    if (container[BOUND]) return;
+    container[BOUND] = true;
+    container.addEventListener('click', (e) => {
+      const svg = container.querySelector('svg');
+      if (!svg) return;
+      e.preventDefault();
       e.stopPropagation();
       openModal(svg);
     });
@@ -76,14 +82,14 @@
     modal.className = MODAL_CLASS;
 
     const clone = originalSvg.cloneNode(true);
-    // Remove width/height so max-width/max-height take over.
     clone.removeAttribute('width');
     clone.removeAttribute('height');
     clone.removeAttribute('style');
 
     const hint = document.createElement('div');
     hint.className = `${MODAL_CLASS}-hint`;
-    hint.textContent = 'クリックまたは Esc で閉じる / ブラウザの拡大 (Ctrl/Cmd + +) でさらに拡大';
+    hint.textContent =
+      'クリックまたは Esc で閉じる / Ctrl/Cmd + +（または⌘+）でさらに拡大';
 
     modal.appendChild(clone);
     modal.appendChild(hint);
@@ -101,10 +107,8 @@
     document.body.appendChild(modal);
   }
 
-  // mermaid renders asynchronously. Bind any SVGs that exist now,
-  // and watch for new ones added later.
   function scan(root) {
-    root.querySelectorAll('pre.mermaid svg, .mermaid > svg').forEach(bindSvg);
+    root.querySelectorAll('pre.mermaid').forEach(bindContainer);
   }
 
   scan(document);
@@ -113,8 +117,8 @@
     for (const m of mutations) {
       m.addedNodes.forEach((node) => {
         if (!(node instanceof Element)) return;
-        if (node.matches && node.matches('pre.mermaid svg, .mermaid > svg')) {
-          bindSvg(node);
+        if (node.matches && node.matches('pre.mermaid')) {
+          bindContainer(node);
         } else {
           scan(node);
         }
