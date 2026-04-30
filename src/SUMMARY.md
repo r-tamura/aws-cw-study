@@ -44,3 +44,4 @@
 [付録A: ハンズオン環境とクリーンアップ](./appendix/a-handson-env.md)
 [付録B: コスト設計チェックリスト](./appendix/b-cost.md)
 [付録C: 用語集](./appendix/c-glossary.md)
+[付録D: インシデント対応ワークフロー](./appendix/d-incident-workflow.md)
