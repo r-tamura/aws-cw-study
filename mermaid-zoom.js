@@ -62,6 +62,22 @@
       opacity: 0.75;
       pointer-events: none;
     }
+    .${MODAL_CLASS}-newtab {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.5rem 0.9rem;
+      background: rgba(255, 255, 255, 0.92);
+      color: #1a1a1a;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+    .${MODAL_CLASS}-newtab:hover {
+      background: #ffffff;
+    }
   `;
   document.head.appendChild(style);
 
@@ -77,6 +93,28 @@
     });
   }
 
+  function openInNewTab(originalSvg) {
+    const clone = originalSvg.cloneNode(true);
+    clone.removeAttribute('width');
+    clone.removeAttribute('height');
+    clone.removeAttribute('style');
+    if (!clone.getAttribute('xmlns')) {
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    }
+    if (!clone.getAttribute('xmlns:xlink')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+    }
+    const xml =
+      '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' +
+      new XMLSerializer().serializeToString(clone);
+    const blob = new Blob([xml], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank', 'noopener');
+    // Best-effort cleanup — keep the URL alive long enough for the new tab
+    // to load, then revoke. Most browsers tolerate revoke after load.
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  }
+
   function openModal(originalSvg) {
     const modal = document.createElement('div');
     modal.className = MODAL_CLASS;
@@ -86,12 +124,22 @@
     clone.removeAttribute('height');
     clone.removeAttribute('style');
 
+    const newTabBtn = document.createElement('button');
+    newTabBtn.className = `${MODAL_CLASS}-newtab`;
+    newTabBtn.type = 'button';
+    newTabBtn.textContent = '新しいタブで開く ↗';
+    newTabBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      openInNewTab(originalSvg);
+    });
+
     const hint = document.createElement('div');
     hint.className = `${MODAL_CLASS}-hint`;
     hint.textContent =
-      'クリックまたは Esc で閉じる / Ctrl/Cmd + +（または⌘+）でさらに拡大';
+      'クリックまたは Esc で閉じる / さらに拡大したいときは「新しいタブで開く」';
 
     modal.appendChild(clone);
+    modal.appendChild(newTabBtn);
     modal.appendChild(hint);
 
     const close = () => {
