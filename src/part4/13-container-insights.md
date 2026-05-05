@@ -250,6 +250,19 @@ Add-on（CloudWatch Observability Operator）は EKS 専用ですが、Container
 
 > TODO: 執筆予定
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [Container Insights with enhanced observability for Amazon EKS](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/container-insights-detailed-metrics.html) — Enhanced 版でコントロールプレーン・Pod・Container 粒度メトリクスが取れる EKS 仕様
+- [Monitor Amazon ECS containers using Container Insights with enhanced observability](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cloudwatch-container-insights.html) — ECS の Enhanced 版（2024/12 リリース）と EC2 / Fargate の対応
+- [Quick start with the Amazon CloudWatch Observability EKS add-on](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-EKS-addon.html) — EKS Add-on で Agent + Fluent Bit + Application Signals を一括展開する手順
+- [Container Insights performance log events for Amazon ECS](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-reference-performance-logs-ECS.html) — `/aws/ecs/containerinsights/.../performance` に書かれる Performance log のフィールド仕様
+- [Specification: Embedded metric format](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format_Specification.html) — Performance log がベースとする EMF の正式仕様
+
+**AWS ブログ / アナウンス**
+- [Container Insights with enhanced observability now available in Amazon ECS](https://aws.amazon.com/blogs/aws/container-insights-with-enhanced-observability-now-available-in-amazon-ecs/) — ECS 向け Enhanced 版の発表（2024/12）
+- [Announcing Amazon CloudWatch Container Insights with Enhanced Observability for Amazon EKS on EC2](https://aws.amazon.com/blogs/mt/new-container-insights-with-enhanced-observability-for-amazon-eks/) — EKS 向け Enhanced 版の発表（2023/11）
+
 ## まとめ
 
 - Container Insights は ECS / EKS / Kubernetes / ROSA で稼働するコンテナのインフラテレメトリを **EMF Performance log → CloudWatch Logs → 自動メトリクス化** の流れで集める統一機能

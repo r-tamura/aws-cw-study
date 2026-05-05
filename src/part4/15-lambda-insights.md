@@ -271,6 +271,19 @@ Lambda Insights は `/aws/lambda-insights` という**専用ロググループ**
 
 > TODO: 執筆予定
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [Monitor function performance with Amazon CloudWatch Lambda Insights](https://docs.aws.amazon.com/lambda/latest/dg/monitoring-insights.html) — Lambda 拡張・EMF Performance log・課金モデルの公式概説
+- [Lambda Insights extension versions for x86-64 platforms](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html) — 各リージョンの最新 Layer ARN 一覧（バージョン毎）
+- [Enable Lambda Insights on a Lambda container image deployment](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-Getting-Started-docker.html) — Container Image Lambda（AL2 / AL2023）への RPM 内蔵手順と GPG 署名検証
+- [Specification: Embedded metric format](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format_Specification.html) — Performance log のベース仕様（`_aws.CloudWatchMetrics`）
+- [Enable Application Signals on Lambda functions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Application-Signals-Enable-LambdaMain.html) — Application Signals の ADOT Layer と Lambda Insights の併用ポイント
+
+**AWS ブログ / アナウンス**
+- [Track performance of serverless applications built using AWS Lambda with Application Signals](https://aws.amazon.com/blogs/aws/track-performance-of-serverless-applications-built-using-aws-lambda-with-application-signals/) — Lambda 向け Application Signals の APM ローンチ（2024）
+- [Introducing CloudWatch Lambda Insights](https://aws.amazon.com/blogs/mt/introducing-cloudwatch-lambda-insights/) — Lambda Insights ローンチ記事（CDK サンプル付き）
+
 ## まとめ
 
 - Lambda Insights は AWS Lambda のサンドボックス内部から **CPU 時間・メモリ実測・コールドスタート・ネットワーク・`/tmp`・スレッド数**を 1 起動 1 EMF イベントで `/aws/lambda-insights` に出し、`LambdaInsights` 名前空間のカスタムメトリクスに自動変換する Lambda 拡張機能
