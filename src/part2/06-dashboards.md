@@ -245,6 +245,19 @@ npx cdk destroy
 
 `cdk destroy` で Lambda / EventBridge Rule / OrderLatency Alarm / Dashboard / LogGroup がまとめて削除される。
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [Using Amazon CloudWatch dashboards](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Dashboards.html) — ダッシュボード作成・IAM 権限・クロスアカウント概要
+- [Creating flexible CloudWatch dashboards with dashboard variables](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_dashboard_variables.html) — Property variable / Pattern variable の違いと使い方
+- [Using a custom widget on a CloudWatch dashboard](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/add_custom_widget_dashboard.html) — Lambda が返す HTML をウィジェット化する仕組み
+- [Creating a custom widget for a CloudWatch dashboard](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/add_custom_widget_dashboard_create.html) — サンプル Lambda + パラメタ設計
+- [Getting started with CloudWatch automatic dashboards](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/GettingStarted.html) — サービス別 / `CloudWatch-Default` の自動ダッシュボード
+
+**AWS ブログ / アナウンス**
+- [Cross-Account Cross-Region Dashboards with Amazon CloudWatch](https://aws.amazon.com/blogs/aws/cross-account-cross-region-dashboards-with-amazon-cloudwatch/) — 監視アカウントから複数アカウントを横断する設定手順
+- [Analyze logs usage with CloudWatch enhanced automatic dashboard](https://aws.amazon.com/blogs/mt/analyze-logs-usage-with-the-enhanced-amazon-cloudwatch-automatic-dashboard/) — Logs 利用状況用の組み込み自動ダッシュボード
+
 ## まとめ
 
 - Dashboards は **観察用 / インシデント用**の作戦盤。Automatic と Custom を併用する

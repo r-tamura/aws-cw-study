@@ -125,6 +125,19 @@ aws ce get-cost-and-usage \
   --output table
 ```
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [Amazon CloudWatch Pricing](https://aws.amazon.com/cloudwatch/pricing/) — Logs / Metrics / Dashboards / Alarms / Application Signals / X-Ray の単価表
+- [Log classes (Standard / Infrequent Access)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatch_Logs_Log_Classes.html) — IA で取り込みコストを約 50% に下げる仕組み
+- [AWS Budgets FAQs](https://aws.amazon.com/aws-cost-management/aws-budgets/faqs/) — 予算数・アラート上限・ディメンション別フィルタの仕様
+- [Set Custom Cost and Usage Budgets — AWS Budgets](https://aws.amazon.com/aws-cost-management/aws-budgets/) — 予算アクション・スケジュールレポートの概要
+
+**AWS ブログ / アナウンス**
+- [Visualizing Amazon CloudWatch Costs – Part 1](https://aws.amazon.com/blogs/mt/visualizing-amazon-cloudwatch-costs-part-1/) — Logs Ingestion / Storage / Custom Metrics をダッシュボード化するテンプレート
+- [Analyze logs usage with CloudWatch enhanced automatic dashboard](https://aws.amazon.com/blogs/mt/analyze-logs-usage-with-the-enhanced-amazon-cloudwatch-automatic-dashboard/) — 取り込み量上位ロググループを 1 クリックで把握
+- [CloudWatch Logs IA gains data protection, OpenSearch PPL, SQL](https://aws.amazon.com/about-aws/whats-new/2026/03/amazon-cloudwatch-infrequent-access-log-class/) — 監査・コンプラ用途を IA に倒す前提の最新機能（2026/03）
+
 ## チェックリスト総括
 
 「**Logs Ingestion を最優先で見る** → Application Signals → Transaction Search → メトリクス → ダッシュボード等のオプション」という順序を覚えておけば、ほとんどのコスト不安は解消できます。逆に「アラーム数を減らせばコストが下がるはず」のような直感は外れがちです。常に Cost Explorer の上位 5 行から手を入れてください。

@@ -185,6 +185,21 @@ OpenTelemetry を介することで、AWS 上のワークロードからは Clou
 
 > 本章はリソースを作成しません。
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [What is Amazon CloudWatch?](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html) — CloudWatch のサービス概要と全機能の入口
+- [Amazon CloudWatch Features](https://aws.amazon.com/cloudwatch/features/) — Metrics / Logs / Alarms / Dashboards / APM の機能一覧
+- [OpenTelemetry on Amazon CloudWatch](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-OpenTelemetry-Sections.html) — 3 シグナル（Metrics / Logs / Traces）の OTel 統合の総覧
+
+**AWS ブログ / アナウンス**
+- [Generative AI observability now generally available for Amazon CloudWatch](https://aws.amazon.com/about-aws/whats-new/2025/10/generative-ai-observability-amazon-cloudwatch/) — 生成 AI ワークロード観測の GA（2025/10）
+- [Amazon CloudWatch now supports OpenTelemetry metrics in public preview](https://aws.amazon.com/about-aws/whats-new/2026/04/amazon-cloudwatch-opentelemetry-metrics/) — OTLP メトリクス + PromQL のネイティブサポート（2026/04）
+- [AWS Observability now available as a Kiro power](https://aws.amazon.com/about-aws/whats-new/2026/02/aws-observability-kiro-power/) — MCP 経由で CloudWatch を AI 開発フローへ統合（2026/02）
+
+**OSS / 標準仕様**
+- [OpenTelemetry Specification](https://opentelemetry.io/docs/specs/otel/) — 本書を貫く Metrics / Logs / Traces の標準仕様（CNCF）
+
 ## まとめ
 
 - CloudWatch は AWS 上のオブザーバビリティを **アカウント / IAM / 課金 / コンソール**で統合する選択肢

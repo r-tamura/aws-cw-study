@@ -91,3 +91,22 @@ CloudWatch まわりの略語は同じ単語が複数の意味で再利用され
 - **Synthetic Monitoring ≠ Network Monitor** → 前者は HTTP / API レベル、後者は L3-4 ネットワークレイヤ
 
 各章の本文で正式名称を最初に出してから略語を使う方針で書いていますが、検索しやすさのため本付録に集約しました。
+
+## 参考資料
+
+**関連章への内部リンク一覧**
+- [Ch3 Metrics](../part2/03-metrics.md) — EMF / Dimension / Metrics Insights
+- [Ch4 Logs](../part2/04-logs.md) — LogGroup / Live Tail / Logs Insights / Metric Filter
+- [Ch5 Alarms](../part2/05-alarms.md) — Composite Alarm / Anomaly Detection
+- [Ch7 Application Signals](../part3/07-application-signals.md) — RED / SLO / Burn Rate / Service Map
+- [Ch11 Ingestion](../part4/11-ingestion.md) — Pipelines / Facets / OCSF
+- [Ch12 OpenTelemetry](../part4/12-opentelemetry.md) — OTLP / PromQL / ADOT
+- [Ch19 Setup](../part6/19-setup.md) — OAM / Sink / Link / Telemetry config
+
+**AWS 公式ドキュメント**
+- [Amazon CloudWatch glossary (FAQs)](https://aws.amazon.com/cloudwatch/faqs/) — 公式の用語整理（取り込み口・観測機能・課金軸）
+- [AWS general glossary](https://docs.aws.amazon.com/general/latest/gr/glos-chap.html) — AWS 全体の用語（IAM / Account / Region など本書の前提語）
+
+**OSS / 標準仕様**
+- [OpenTelemetry glossary](https://opentelemetry.io/docs/specs/otel/glossary/) — Span / Metric / Resource など 3 シグナル基本語
+- [SRE Glossary (Google SRE Book)](https://sre.google/sre-book/glossary/) — SLI / SLO / SLA / Error Budget の標準定義

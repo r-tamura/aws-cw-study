@@ -269,6 +269,19 @@ Logs はコスト最大の発生源です。次の順で見直します。
 
 `npx cdk destroy` でスタックを削除すると、Lambda・API Gateway・関連 IAM ロール、そしてこのスタックで明示的に作ったロググループ（`removalPolicy=DESTROY` を指定）もまとめて消える。メトリクスフィルタはロググループに紐付くため、ロググループ削除と同時に消滅する。残ったログがあれば `aws logs delete-log-group --log-group-name /aws/lambda/aws-cw-study-ch04-...` で手動削除する。
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [Supported query languages (Logs Insights)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_AnalyzeLogData_Languages.html) — Logs Insights QL / OpenSearch PPL / OpenSearch SQL の対応
+- [CloudWatch Logs Insights query language (Logs Insights QL)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_AnalyzeLogData_LogsInsights.html) — コマンド・関数・サンプルクエリ
+- [Troubleshoot with CloudWatch Logs Live Tail](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogs_LiveTail.html) — Live Tail のセッション仕様（最長 3 時間 / 500 events/s）
+- [Log anomaly detection](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/LogsAnomalyDetection.html) — 2 週間ベースラインからの異常検出ロジック
+- [Log classes (Standard / Infrequent Access)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatch_Logs_Log_Classes.html) — 2 クラスの料金差と機能制限の比較
+- [Filter pattern syntax for metric filters](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntaxForMetricFilters.html) — `{ $.level = "ERROR" }` 等のフィルタパターン文法
+
+**AWS ブログ / アナウンス**
+- [CloudWatch Logs IA now supports data protection, OpenSearch PPL, and SQL](https://aws.amazon.com/about-aws/whats-new/2026/03/amazon-cloudwatch-infrequent-access-log-class/) — IA クラスの機能拡張（2026/03）
+
 ## まとめ
 
 - CloudWatch Logs は **LogGroup → LogStream → LogEvent** の 3 階層、運用は LogGroup 単位

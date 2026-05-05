@@ -253,6 +253,19 @@ npx cdk destroy
 
 スタックを削除すると、Lambda・API Gateway・関連 IAM ロールがまとめて消える。CloudWatch Logs のロググループは Lambda 削除後も残るため、必要に応じて `aws logs delete-log-group --log-group-name /aws/lambda/AwsCwStudyCh03Metrics-...` で個別に削除する。カスタムメトリクスは保持期間（最大 15 ヶ月）を過ぎれば自動失効する。
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [Specification: Embedded metric format](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format_Specification.html) — EMF の JSON スキーマ正式仕様（RFC 2119 / RFC 8259 準拠）
+- [Query components and syntax in CloudWatch Metrics Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch-metrics-insights-querylanguage.html) — `SELECT` / `FROM SCHEMA()` / `GROUP BY` の文法
+- [Use metric streams](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Metric-Streams.html) — Firehose 経由で全メトリクスを外部送出する仕組み
+- [Collect metrics and traces with OpenTelemetry (CloudWatch agent)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-OpenTelemetry-metrics.html) — OTLP gRPC / HTTP のエンドポイント設定
+
+**AWS ブログ / アナウンス**
+- [Amazon CloudWatch now supports OpenTelemetry metrics in public preview](https://aws.amazon.com/about-aws/whats-new/2026/04/amazon-cloudwatch-opentelemetry-metrics/) — OTLP ネイティブ + PromQL + Query Studio（2026/04）
+- [Introducing OpenTelemetry & PromQL support in Amazon CloudWatch](https://aws.amazon.com/blogs/mt/introducing-opentelemetry-promql-support-in-amazon-cloudwatch/) — 高カーディナリティ（150 ラベル）対応の解説（2026/04）
+- [Enhancing workload observability using CloudWatch Embedded Metric Format](https://aws.amazon.com/blogs/mt/enhancing-workload-observability-using-amazon-cloudwatch-embedded-metric-format/) — EMF が高カーディナリティ問題を解く設計理由
+
 ## まとめ
 
 - CloudWatch Metrics は **名前空間 × メトリクス × ディメンション × 時系列**のシンプルなモデル
