@@ -261,6 +261,19 @@ OTel の最大の利点はベンダー非依存性ですが、書き方によっ
 
 > TODO: 執筆予定
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [CloudWatch OTLP Endpoints](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-OTLPEndpoint.html) — Logs / Metrics / Traces / RUM 各 OTLP HTTP エンドポイントの URL と SigV4 認証
+- [Sending logs using the OTLP endpoint (`/v1/logs`)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_HTTP_Endpoints_OTLP.html) — LogGroup / LogStream ヘッダ・partial success・1MB Large Log Object の仕様
+- [Exporting collector-less telemetry using AWS Distro for OpenTelemetry (ADOT) SDK](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-OTLP-UsingADOT.html) — Collector を介さずに ADOT SDK 単体で OTLP エンドポイントへ送る前提条件と IAM
+- [Collect metrics and traces with OpenTelemetry (CloudWatch Agent)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-OpenTelemetry-metrics.html) — CloudWatch Agent の `otlp` レシーバ設定と CloudWatch / AMP / X-Ray 振り分け
+
+**AWS ブログ / アナウンス**
+- [Introducing OpenTelemetry & PromQL support in Amazon CloudWatch](https://aws.amazon.com/blogs/mt/introducing-opentelemetry-promql-support-in-amazon-cloudwatch/) — OTLP メトリクス・150 ラベル高カーディナリティ・PromQL 対応（2025）
+- [AWS Distro for OpenTelemetry FAQs](https://aws.amazon.com/otel/faqs/) — ADOT のスコープ・対応言語・Lambda Layer・サポートポリシー
+- [Track performance of serverless applications with Application Signals](https://aws.amazon.com/blogs/aws/track-performance-of-serverless-applications-built-using-aws-lambda-with-application-signals/) — Lambda 向け ADOT Layer による APM 自動計装（2024）
+
 ## まとめ
 
 - OpenTelemetry は Metrics / Logs / Traces の 3 信号を **OTLP プロトコル + 共通 Resource** で統一する CNCF 標準

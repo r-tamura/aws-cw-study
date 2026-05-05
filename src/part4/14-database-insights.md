@@ -263,6 +263,19 @@ Database Insights は **vCPU ベース（プロビジョンドインスタンス
 
 > TODO: 執筆予定
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [CloudWatch Database Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Database-Insights.html) — Standard / Advanced 2 モードの機能差と RDS / Aurora 対応一覧
+- [Get started with CloudWatch Database Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Database-Insights-Get-Started.html) — DB 単位での Standard / Advanced の有効化と必要な IAM 権限
+- [Set up cross-account cross-region monitoring for CloudWatch Database Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Database-Insights-Cross-Account-Cross-Region.html) — OAM とフリート Health Dashboard の cross-account / region 設定
+- [Analyzing lock trees for Aurora PostgreSQL / RDS PostgreSQL](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Database-Insights-Lock-Analysis.html) — Advanced 限定機能：15 秒間隔のロックツリー分析（2026/02 公開）
+- [Overview of Performance Insights on Amazon RDS](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PerfInsights.Overview.html) — 2026/06/30 EOL アナウンスと Database Insights Advanced への移行ガイダンス
+
+**AWS ブログ / アナウンス**
+- [New Amazon CloudWatch Database Insights: Comprehensive database observability from fleets to instances](https://aws.amazon.com/blogs/aws/new-amazon-cloudwatch-database-insights-comprehensive-database-observability-from-fleets-to-instances/) — Database Insights ローンチ告知（2024/12）
+- [Amazon CloudWatch Database Insights applied in real scenarios](https://aws.amazon.com/blogs/database/amazon-cloudwatch-database-insights-applied-in-real-scenarios/) — Missing index など 3 つの実シナリオでの Advanced モード活用例
+
 ## まとめ
 
 - Database Insights は RDS / Aurora を対象に「フリート → クラスタ → インスタンス → SQL」の階層ダッシュボードと Top SQL / 待機イベント分析を CloudWatch コンソール内に統合した上位レイヤ
