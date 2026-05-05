@@ -202,6 +202,19 @@ aws logs delete-log-group --log-group-name aws/spans --region ap-northeast-1
 
 第7章のスタック自体を破棄するなら、最後に `cd ../chapter-07 && npx cdk destroy`。
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [CloudWatch Transaction Search](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Transaction-Search.html) — Transaction Search の概念・`aws/spans`・Visual Editor の総合リファレンス
+- [Enable transaction search](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Enable-TransactionSearch.html) — 必要な IAM 権限とコンソール / API での有効化手順
+- [Sending OpenTelemetry data to AWS X-Ray](https://docs.aws.amazon.com/xray/latest/devguide/xray-services-cloudwatch.html) — OTLP / X-Ray の双方からスパンを取り込む際の構成
+
+**AWS ブログ / アナウンス**
+- [Amazon CloudWatch launches full visibility into application transactions](https://aws.amazon.com/about-aws/whats-new/2024/11/amazon-cloudwatch-visibility-application-transactions/) — Transaction Search の Application Signals 統合 GA（2024/11）
+
+**OSS / 標準仕様**
+- [OpenTelemetry — OTLP Specification](https://opentelemetry.io/docs/specs/otlp/) — Transaction Search が受け取るスパンの転送プロトコル仕様
+
 ## まとめ
 
 - Transaction Search は **X-Ray のサンプリング限界を解決するための「全スパン保存層」**
