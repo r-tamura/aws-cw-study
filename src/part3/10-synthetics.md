@@ -169,6 +169,18 @@ aws synthetics describe-canaries \
 # -> []
 ```
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [Synthetic monitoring (canaries)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries.html) — Canary・Blueprint・スケジュール・アーティファクトの総合リファレンス
+- [Creating a multi checks blueprint canary](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_MultiCheck_Blueprint.html) — JSON 設定だけで HTTP / DNS / SSL / TCP を 1 Canary にバンドルする新 Blueprint
+- [Runtime versions support policy](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Runtime_Support_Policy.html) — `syn-nodejs-3.0+` を含む各ランタイムの非推奨スケジュール
+- [Library functions for Node.js canary scripts using Playwright](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Nodejs_Playwright.html) — `syn-nodejs-3.0+` で利用できる Playwright ベースの Canary API リファレンス
+
+**AWS ブログ / アナウンス**
+- [Amazon CloudWatch Synthetics now supports bundled multi-check canaries](https://aws.amazon.com/about-aws/whats-new/2025/10/amazon-cloudwatch-synthetics-bundled-multi-check-canaries/) — Multi-checks blueprint 公開（2025/10）
+- [AWS CloudWatch Synthetics adds safe canary updates and automatic retries](https://aws.amazon.com/about-aws/whats-new/2025/05/aws-cloudwatch-synthetics-canary-updates-automatic-retries/) — Canary 更新時のセーフテストと自動リトライ（2025/05）
+
 ## まとめ
 
 - Synthetics は **能動的な合成監視**で、RUM の受動的な観測と補完関係

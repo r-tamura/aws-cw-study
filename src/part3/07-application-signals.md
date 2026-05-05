@@ -190,6 +190,21 @@ npx cdk destroy
 2. 作成した Burn Rate アラーム
 3. ロググループ `/aws/lambda/CheckoutApi` / `/aws/lambda/InventoryApi` / `/aws/application-signals/data`
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [CloudWatch Application Signals User Guide](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Application-Monitoring-Sections.html) — Application Signals の有効化・対応環境・Service Map の総合リファレンス
+- [Service level objectives (SLOs)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-ServiceLevelObjectives.html) — Period-based / Request-based SLO、エラーバジェット、Burn Rate 設定の公式解説
+- [aws-cdk-lib.aws_applicationsignals.CfnServiceLevelObjective](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_applicationsignals.CfnServiceLevelObjective.html) — CDK で SLO を IaC 化する際の L1 Construct リファレンス
+
+**AWS ブログ / アナウンス**
+- [Amazon CloudWatch Application Signals, for application monitoring (APM) is generally available](https://aws.amazon.com/about-aws/whats-new/2024/06/amazon-cloudwatch-application-signals-application-monitoring/) — APM 機能としての GA アナウンス（2024/06）
+- [Amazon CloudWatch Application Signals adds new SLO capabilities](https://aws.amazon.com/about-aws/whats-new/2026/03/cloudwatch-application-signals-adds-slo-capabilities/) — SLO Recommendations / Service-Level SLOs / SLO Performance Report 追加（2026/03）
+- [Monitor service dependencies with Amazon CloudWatch Application Signals SLOs](https://aws.amazon.com/about-aws/whats-new/2025/04/service-dependencies-amazon-cloudwatch-application-signals-slos/) — 依存サービスのメトリクスから SLO を作成可能に（2025/04）
+
+**OSS / 標準仕様**
+- [Google SRE Workbook — Alerting on SLOs](https://sre.google/workbook/alerting-on-slos/) — `14.4` などの multi-window multi-burn-rate alert 閾値の出典
+
 ## まとめ
 
 - Application Signals は「アプリ視点の APM」を CloudWatch 上で完結させる機能

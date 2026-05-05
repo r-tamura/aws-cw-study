@@ -189,6 +189,20 @@ npx cdk destroy
 S3 バケット（中身込み、`autoDeleteObjects: true`）/ ロググループがすべて消えます。
 CloudFront の無効化に数分かかる点だけ注意してください。
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [What is CloudWatch RUM](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM.html) — RUM の概念、App Monitor、収集データの総合リファレンス
+- [Set up a mobile application to use CloudWatch RUM](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-web-mobile.html) — iOS / Android 向け ADOT SDK のセットアップ手順
+- [Authorize your web application to send data to AWS](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-get-started-authorization.html) — Cognito Identity Pool（未認証ロール）など 4 種類の認可方式
+
+**AWS ブログ / アナウンス**
+- [Amazon CloudWatch real user monitoring (RUM) adds support for iOS and Android applications](https://aws.amazon.com/about-aws/whats-new/2025/11/real-user-monitoring-mobile-apps-cloudwatch/) — モバイル RUM（OTel ベース）追加（2025/11）
+- [Amazon CloudWatch RUM now supports an improved App Monitors overview with health, SLO, and tracing status](https://aws.amazon.com/about-aws/whats-new/2026/04/amazon-cloudwatch-rum-app-monitors/) — フリート全体の health / SLO / tracing を一覧する新ダッシュボード（2026/04）
+
+**OSS / 標準仕様**
+- [aws-observability/aws-rum-web (GitHub)](https://github.com/aws-observability/aws-rum-web) — Web RUM SDK のソース・サンプル・設定リファレンス
+
 ## まとめ
 
 - RUM は **ユーザー視点の体験**を測る、サーバ側 APM の補完物
