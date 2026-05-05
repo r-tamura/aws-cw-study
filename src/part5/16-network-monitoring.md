@@ -235,6 +235,19 @@ Network Flow Monitor は **AWS Organizations 連携**で複数アカウントの
 
 > TODO: 執筆予定
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [What is Internet Monitor?](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-InternetMonitor.what-is-cwim.html) — City-Network 単位のヘルスイベントとモニター対象リソース（VPC / NLB / CloudFront / WorkSpaces）の概念整理
+- [Install Network Flow Monitor agents on EC2 and self-managed Kubernetes instances](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-NetworkFlowMonitor-agents.html) — eBPF エージェントの配布方法と PrivateLink 経由の閉域構成
+- [Using Network Synthetic Monitor](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/what-is-network-monitor.html) — Direct Connect / VPN 経由のオンプレ宛プローブとパケットロス・レイテンシ計測
+- [Monitor with Amazon CloudWatch (AWS Direct Connect)](https://docs.aws.amazon.com/directconnect/latest/UserGuide/monitoring-cloudwatch.html) — 仮想インターフェイス BGP 系メトリクスを含む Direct Connect 全般の CloudWatch 監視
+
+**AWS ブログ / アナウンス**
+- [Visualizing network performance of your AWS Cloud workloads with Network Flow Monitor](https://aws.amazon.com/blogs/networking-and-content-delivery/visualizing-network-performance-of-your-aws-cloud-workloads-with-network-flow-monitor/) — re:Invent 2024 発表の Network Flow Monitor と Network Health Indicator の解説（2024/12）
+- [Introducing CloudWatch Metrics for AWS Direct Connect Virtual Interface BGP Health and Prefix Count](https://aws.amazon.com/blogs/networking-and-content-delivery/introducing-cloudwatch-metrics-for-aws-direct-connect-virtual-interface-bgp-health-and-prefix-count/) — `VirtualInterfaceBgpStatus` などの BGP メトリクス追加発表（2026/03）
+- [Monitor network performance and traffic across your EKS clusters with Container Network Observability](https://aws.amazon.com/blogs/aws/monitor-network-performance-and-traffic-across-your-eks-clusters-with-container-network-observability/) — Network Flow Monitor を裏で使う EKS Container Network Observability の発表
+
 ## まとめ
 
 - CloudWatch のネットワークモニタリングは **Internet Monitor / Network Flow Monitor / Network Monitor（旧 Network Synthetic Monitor）** の 3 つから成り、対象が **AWS の外側 / VPC 内 / オンプレ↔AWS** で重ならない
