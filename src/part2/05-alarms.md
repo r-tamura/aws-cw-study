@@ -228,6 +228,21 @@ npx cdk destroy
 
 スタック削除で Lambda・EventBridge ルール・SNS Topic・3 つのアラーム・Anomaly Detector がまとめて消える。Lambda のロググループはスタックに紐づけ済み (`RemovalPolicy.DESTROY`) なので残骸は残らないが、CloudWatch のカスタムメトリクスデータ自体は AWS 側で自動失効（15 か月）するまで参照可能。
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [Configuring how CloudWatch alarms treat missing data](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/alarms-and-missing-data.html) — `notBreaching` / `breaching` / `ignore` / `missing` の 4 オプションの使い分け
+- [Create a composite alarm](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Create_Composite_Alarm.html) — `AND` / `OR` / `NOT` を使うルール式の組み立て
+- [Service level objectives (SLOs) — Application Signals](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-ServiceLevelObjectives.html) — Burn Rate アラームを SLI から作る公式ガイド
+- [Anomaly detection alarm (CDK construct)](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudwatch.AnomalyDetectionAlarm.html) — `stdDevs` と band 比較演算子の指定方法
+
+**AWS ブログ / アナウンス**
+- [Operationalizing CloudWatch Anomaly Detection](https://aws.amazon.com/blogs/mt/operationalizing-cloudwatch-anomaly-detection/) — 学習期間・感度調整のチューニング手順
+- [Alarming on SLOs in Amazon Search with CloudWatch Application Signals](https://aws.amazon.com/blogs/mt/alarming-on-slos-in-amazon-search-with-cloudwatch-application-signals-part-1/) — 静的しきい値から Burn Rate へ移行した実例
+
+**OSS / 標準仕様**
+- [Google SRE Workbook: Alerting on SLOs](https://sre.google/workbook/alerting-on-slos/) — Burn Rate アラーム設計の標準的な参照（マルチウィンドウ・マルチバーンレート）
+
 ## まとめ
 
 - アラームは **メトリクス / 算術 / Composite を入力に、3 状態 + アクション**で動く

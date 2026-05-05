@@ -258,6 +258,21 @@ Investigations を起動して、ログの新出パターンを観測として A
 4. **Composite Alarm の親子をたどる** — 親 Alarm が ALARM の場合、子 Alarm の状態を全部見て切り分ける（[Ch 5](../part2/05-alarms.md)）
 5. **Investigation Report を初稿として活用** — 復旧後にゼロからポストモーテムを書くより、AI 生成の初稿を編集する方が圧倒的に速い
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [CloudWatch investigations](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Investigations.html) — Observation / Hypothesis / Suggestion の AI 駆動 RCA
+- [Service level objectives (SLOs) — Application Signals](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-ServiceLevelObjectives.html) — SLI / Burn Rate アラームの構築フロー
+- [Log anomaly detection](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/LogsAnomalyDetection.html) — Log Anomaly Detector からのケース 4 起点
+
+**AWS ブログ / アナウンス**
+- [CloudWatch incident reports now support Five Whys analysis](https://aws.amazon.com/about-aws/whats-new/2025/11/amazon-cloudwatch-incident-reports-five-whys-analysis/) — Investigation の Five Whys ワークフロー（2025/11）
+- [Investigate and remediate operational issues with Amazon CloudWatch Investigations](https://aws.amazon.com/blogs/aws/investigate-and-remediate-operational-issues-with-amazon-q-developer/) — トポロジ自動探索と仮説提示の挙動
+
+**OSS / 標準仕様**
+- [Google SRE Workbook: Postmortem Culture](https://sre.google/workbook/postmortem-culture/) — ポストモーテムの非難フリー運用と再発防止の標準フレーム
+- [Google SRE Workbook: Alerting on SLOs](https://sre.google/workbook/alerting-on-slos/) — Burn Rate アラームの設計指針（マルチウィンドウ）
+
 ## 関連章
 
 - [Ch 5 Alarms](../part2/05-alarms.md): 通知レイヤの設計

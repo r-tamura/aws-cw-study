@@ -194,6 +194,17 @@ aws s3api list-buckets --query 'Buckets[?starts_with(Name,`cdk-hnb659fds-assets-
 
 最終手段として **アカウントごと閉鎖**します。Organizations 配下なら親アカウントから「Close account」できます。閉鎖後 90 日はアカウントが復活可能で、その間も EC2 等の起動課金は止まります（CloudWatch Logs の保管課金はサブ秒で止まります）。
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [AWS CDK bootstrapping](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.md) — `CDKToolkit` スタックが管理する S3 / ECR / IAM
+- [Best practices for developing and deploying with the AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.md) — Stateful / Stateless 分離と destroy 安全性の指針
+- [Configuring CDK Toolkit programmatic actions (destroy)](https://docs.aws.amazon.com/cdk/v2/guide/toolkit-library-actions.md) — `cdk destroy` の挙動と注意点
+- [Managing your costs with AWS Budgets](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) — 予算アラートで「走らせ放し」を検知
+
+**AWS ブログ / アナウンス**
+- [Automating Amazon CloudWatch Alarm Cleanup at Scale](https://aws.amazon.com/blogs/mt/automating-amazon-cloudwatch-alarm-cleanup-at-scale/) — 残骸アラームの定期掃除パイプライン
+
 ## 締めのチェックリスト
 
 ハンズオンが終わったら、最後に以下を順に実行して帰ります。

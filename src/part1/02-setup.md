@@ -212,6 +212,19 @@ done
 
 最後に AWS Budgets のメール通知が来ない月になることを確認します（前月分の集計に 1〜2 日かかります）。
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [Configuring IAM Identity Center authentication with the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html) — `aws configure sso` の手順とトークンプロバイダ設定
+- [AWS CDK bootstrapping](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.md) — `cdk bootstrap` が作る CDKToolkit スタックの内訳
+- [`cdk bootstrap` command reference](https://docs.aws.amazon.com/cdk/v2/guide/ref-cli-cmd-bootstrap.md) — リージョン引数とフラグの一覧
+- [Manual installation on Amazon EC2 (CloudWatch agent)](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/manual-installation.html) — Linux / Windows / macOS 別のエージェント導入手順
+- [Managing your costs with AWS Budgets](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) — 予算作成・通知・SNS 連携の解説
+- [Creating a budget](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-create.html) — テンプレート / カスタム両方の作成手順
+
+**AWS ブログ / アナウンス**
+- [Manage CloudWatch agent deployment at scale using AWS CDK](https://aws.amazon.com/blogs/mt/manage-amazon-cloudwatch-agent-deployment-at-scale-using-the-aws-cloud-development-kit-to-optimize-aws-usage/) — CDK でエージェントをフリート展開する設計例
+
 ## まとめ
 
 - 本書のハンズオンは **検証用アカウント / `ap-northeast-1` / Node.js 22 + Python 3.13 + CDK v2** が前提
