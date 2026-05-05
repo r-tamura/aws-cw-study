@@ -236,6 +236,19 @@ Investigations は既存のオンコール（PagerDuty / OpsGenie / 自社 IM）
 
 > TODO: 執筆予定
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [CloudWatch investigations](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Investigations.html) — Investigation Group / 観測 / 仮説 / accept-discard ワークフロー全体の正本
+- [Using 5 Whys analysis in incident reports](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/incident-report-5whys.html) — Amazon Q による対話的 5 Whys と必要な IAM 権限
+- [Generate incident reports](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Investigations-Incident-Reports.html) — Incident overview / Impact / RCA / Lessons learned のセクション構成と `AIOpsAssistantIncidentReportPolicy` の付与
+- [AIOpsAssistantPolicy / AIOpsAssistantIncidentReportPolicy (managed policy reference)](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AIOpsAssistantPolicy.html) — サービスロールに付与する読み取り権限と、レポート生成用の追加権限
+
+**AWS ブログ / アナウンス**
+- [Investigate and remediate operational issues with Amazon CloudWatch Investigations (preview)](https://aws.amazon.com/blogs/aws/investigate-and-remediate-operational-issues-with-amazon-q-developer/) — 公式プレビュー発表の概要記事（2024/12）
+- [Getting started with Amazon CloudWatch investigations](https://aws.amazon.com/blogs/mt/getting-started-with-amazon-q-developer-operational-investigations/) — Investigation Group のセットアップ・3 つのマネージドポリシーの使い分け
+- [Enhance your AIOps: Introducing Amazon CloudWatch and Application Signals MCP servers](https://aws.amazon.com/blogs/mt/enhance-your-aiops-introducing-amazon-cloudwatch-and-application-signals-mcp-servers/) — Investigations を MCP 経由で外部 AI から呼ぶ運用構成（2025/11）
+
 ## まとめ
 
 - CloudWatch Investigations は **AI エージェントによるトリアージ補助**で、アラーム / SLO / 手動 / チャットの 4 経路から起動し、Metrics / Logs / Traces / Resources を横断スキャンして観測 → 仮説 → 5 Whys → インシデントレポートまでをワンレールで支援する

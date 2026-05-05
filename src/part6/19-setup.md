@@ -295,6 +295,18 @@ OAM はリージョン内、コンソールはリージョンまたぎ、Central
 
 > TODO: 執筆予定
 
+## 参考資料
+
+**AWS 公式ドキュメント**
+- [Cross-account cross-Region log centralization](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogs_Centralization.html) — Centralization rule / `@aws.account` / `@aws.region` 自動付与・暗号化の正本
+- [Setting up telemetry configuration](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/telemetry-config-turn-on.html) — Resource discovery と Enablement rule の設定手順
+- [Enable telemetry configuration for your organization](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/telemetry-config-organization.html) — Organizations の trusted access と delegated administrator
+- [Observability Access Manager (OAM) CLI reference](https://docs.aws.amazon.com/cli/latest/reference/oam/index.html) — Sink / Link / Sink ポリシーの API/CLI と共有可能な 6 種テレメトリ
+
+**AWS ブログ / アナウンス**
+- [New – Amazon CloudWatch Cross-Account Observability](https://aws.amazon.com/blogs/aws/new-amazon-cloudwatch-cross-account-observability/) — OAM ベースの Cross-account observability 公式アナウンス
+- [Simplifying Log Management using Amazon CloudWatch Logs Centralization](https://aws.amazon.com/blogs/mt/simplifying-log-management-using-amazon-cloudwatch-logs-centralization/) — Centralization rule の実装ウォークスルー（2025/09 GA 解説）
+
 ## まとめ
 
 - 「セットアップ」メニューは **OAM (Sink/Link) + Cross-account/Cross-region コンソール + Log centralization + Telemetry config + Organizations 連携** の 5 つで構成され、本書でこれまで章ごとに見てきた機能群を**マルチアカウント・マルチリージョンで運用するための土台**を提供する
